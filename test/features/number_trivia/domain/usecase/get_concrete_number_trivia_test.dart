@@ -28,6 +28,12 @@ void main() {
           .thenAnswer((_) async => const Right(tNumberTrivia));
 
       final result = await getConcreteNumberTrivia.execute(number: tNumber);
+
+      expect(result, const Right(tNumberTrivia));
+
+      verify(() => mockNumberTriviaRepository.getConcreteNumberTrivia(tNumber))
+          .called(1);
+      verifyNoMoreInteractions(mockNumberTriviaRepository);
     });
   });
 }
