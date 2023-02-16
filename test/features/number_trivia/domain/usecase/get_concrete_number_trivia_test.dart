@@ -26,6 +26,8 @@ void main() {
     test('get number from repository', () async {
       when(() => mockNumberTriviaRepository.getConcreteNumberTrivia(any()))
           .thenAnswer((_) async => const Right(tNumberTrivia));
+
+      final result = await getConcreteNumberTrivia.execute(number: tNumber);
     });
   });
 }
