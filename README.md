@@ -23,3 +23,10 @@ aka entity
 > first as suggested by uncle bob we should start in the entity
 so i will make numberTrivia entity that should be able to hold
 text and number
+
+> usecase will use repository and get number trivia but repository
+can not just return numberTrivia it will return Future < NumberTriva >
+but what about errors is it good to allow exception to go above layer
+for me it's not so we will return either Failure object or NumberTrivia
+entity in repository but how can one function return different stuff
+that's will solved using dartz package
