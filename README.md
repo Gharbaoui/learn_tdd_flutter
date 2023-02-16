@@ -22,4 +22,4 @@ aka entity
 
 > first as suggested by uncle bob we should start in the entity
 > so i will make numberTrivia entity that should be able to hold
-> text and number
+text and number
