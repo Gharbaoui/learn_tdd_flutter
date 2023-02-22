@@ -31,7 +31,7 @@ for me it's not so we will return either Failure object or NumberTrivia
 entity in repository but how can one function return different stuff
 that's will solved using dartz package
 
-#### Domain layer
+#### Domain Layer
 
 **Entity**
 
@@ -54,4 +54,19 @@ use repository to get/execute this buisness logic
 we will define how the respitory should look like it should have
 two methods one for getConcreteNumberTrivia and one for
 getRandomNumberTrivia
+```
+
+#### Data Layer
+
+```
+we'll start by creating with the model and only then go ahead and implement the repository and the low-level sources
+
+repository should return numberTrivia as the contract says but we can get data from thin air so before creating the repository
+we will have to make the remoate and local data sources first
+
+again we will not need to create their implemenation all we need is contract so we can mock the data sources for testing
+
+data sources will return numberTriviaModel
+
+models are entities with some additional functionality added on top
 ```
