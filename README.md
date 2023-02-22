@@ -37,7 +37,7 @@ that's will solved using dartz package
 
 ```
 we need to ask what kind of data that our app will utilize
-well numberTrivia entities of course and we need text and number
+well numberTrivia entities of course that have text and number
 ```
 
 **Use Cases**
@@ -45,7 +45,7 @@ well numberTrivia entities of course and we need text and number
 ```
 our app will need get concrete number trivia
 and get random number trivia and each use case will
-use repository to get execute this buisness logic
+use repository to get/execute this buisness logic
 ```
 
 **Repository**
