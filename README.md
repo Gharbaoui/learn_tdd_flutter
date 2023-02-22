@@ -30,3 +30,28 @@ but what about errors is it good to allow exception to go above layer
 for me it's not so we will return either Failure object or NumberTrivia
 entity in repository but how can one function return different stuff
 that's will solved using dartz package
+
+#### Domain layer
+
+**Entity**
+
+```
+we need to ask what kind of data that our app will utilize
+well numberTrivia entities of course and we need text and number
+```
+
+**Use Cases**
+
+```
+our app will need get concrete number trivia
+and get random number trivia and each use case will
+use repository to get execute this buisness logic
+```
+
+**Repository**
+
+```
+we will define how the respitory should look like it should have
+two methods one for getConcreteNumberTrivia and one for
+getRandomNumberTrivia
+```
