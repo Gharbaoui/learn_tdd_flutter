@@ -31,7 +31,7 @@ for me it's not so we will return either Failure object or NumberTrivia
 entity in repository but how can one function return different stuff
 that's will solved using dartz package
 
-#### Domain layer `#0cf049`
+#### Domain layer
 
 **Entity**
 
