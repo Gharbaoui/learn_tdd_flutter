@@ -59,12 +59,15 @@ getRandomNumberTrivia
 #### Data Layer
 
 ```
-we'll start by creating with the model and only then go ahead and implement the repository and the low-level sources
+we'll start by creating with the model and only then go ahead
+and implement the repository and the low-level sources
 
-repository should return numberTrivia as the contract says but we can get data from thin air so before creating the repository
+repository should return numberTrivia as the contract says
+but we can get data from thin air so before creating the repository
 we will have to make the remoate and local data sources first
 
-again we will not need to create their implemenation all we need is contract so we can mock the data sources for testing
+again we will not need to create their implemenation
+all we need is contract so we can mock the data sources for testing
 
 data sources will return numberTriviaModel
 
