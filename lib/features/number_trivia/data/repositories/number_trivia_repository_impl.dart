@@ -11,6 +11,8 @@ import 'package:number_trivia/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:number_trivia/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 
+typedef Future<NumberTriviaModel> _RandomOrConcreteChooser();
+
 class NumberTriviaRepsitoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
   final NumberTriviaLocalDataSource localDataSource;
@@ -39,8 +41,8 @@ class NumberTriviaRepsitoryImpl implements NumberTriviaRepository {
   }
 
   Future<Either<Failure, NumberTrivia>> _getTrivia(
-      Future<NumberTriviaModel> Function()
-          getConcreteOrRandomNumberTrivia) async {
+    _RandomOrConcreteChooser getConcreteOrRandomNumberTrivia,
+  ) async {
     if (await networkInfo.isConnected) {
       try {
         final numberTriviaModel = await getConcreteOrRandomNumberTrivia();
