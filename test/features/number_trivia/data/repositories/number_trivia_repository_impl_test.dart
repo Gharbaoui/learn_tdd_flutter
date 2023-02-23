@@ -3,7 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:number_trivia/core/platform/network_info.dart';
 import 'package:number_trivia/features/number_trivia/data/datasources/number_trivia_local_datasource.dart';
 import 'package:number_trivia/features/number_trivia/data/datasources/number_trivia_remote_datasource.dart';
+import 'package:number_trivia/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:number_trivia/features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
+import 'package:number_trivia/features/number_trivia/domain/entities/number_trivia.dart';
 
 class MockRemoteDataSource extends Mock
     implements NumberTriviaRemoteDataSource {}
@@ -30,5 +32,18 @@ void main() {
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
     );
+  });
+
+  group('getConcreteNumberTrivia', () {
+    const int tNumber = 0;
+    const tNumberTriviaModel =
+        NumberTriviaModel(number: tNumber, text: 'Test Text');
+    const NumberTrivia tNumberTrivia = tNumberTriviaModel;
+    test('check if device online', () {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      repository.getConcreteNumberTrivia(tNumber);
+      verify(() => mockNetworkInfo.isConnected).called(1);
+      verifyNoMoreInteractions(mockNetworkInfo);
+    });
   });
 }
