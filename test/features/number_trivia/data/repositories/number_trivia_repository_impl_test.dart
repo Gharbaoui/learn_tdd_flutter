@@ -47,6 +47,8 @@ void main() {
     test('check if device online', () {
       when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
           .thenAnswer((_) async => tNumberTriviaModel);
+      when(() => mockLocalDataSource.cacheNumberTrivia(any()))
+          .thenAnswer((_) async {});
 
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       repository.getConcreteNumberTrivia(tNumber);
@@ -60,10 +62,12 @@ void main() {
       });
 
       test(
-          'should return remote data whene the call to remote data source is success',
+          'should return remote data when the call to remote data source is success',
           () async {
         when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
             .thenAnswer((_) async => tNumberTriviaModel);
+        when(() => mockLocalDataSource.cacheNumberTrivia(any()))
+            .thenAnswer((_) async {});
 
         final result = await repository.getConcreteNumberTrivia(tNumber);
         verify(() => mockRemoteDataSource.getConcreteNumberTrivia(tNumber))
