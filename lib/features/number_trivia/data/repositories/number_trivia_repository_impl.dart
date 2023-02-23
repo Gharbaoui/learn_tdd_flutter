@@ -24,9 +24,11 @@ class NumberTriviaRepsitoryImpl implements NumberTriviaRepository {
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
       int number) async {
     networkInfo.isConnected;
-    return Right(NumberTrivia(text: 'Test Text', number: number));
+    return Right(await remoteDataSource.getConcreteNumberTrivia(number));
   }
 
   @override
+  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
+    return const Right(NumberTrivia(text: 'Test Text', number: 1));
   }
 }
