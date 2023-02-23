@@ -106,5 +106,19 @@ void main() {
         expect(result, Left(ServerFailure()));
       });
     });
+    group('device is offline', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+      test('should return last locally data when the cached data is present',
+          () async {
+        when(() => mockLocalDataSource.getLastNumberTrivia())
+            .thenAnswer((_) async => tNumberTriviaModel);
+        final result = await repository.getConcreteNumberTrivia(tNumber);
+        verifyZeroInteractions(mockRemoteDataSource);
+        verify(() => mockLocalDataSource.getLastNumberTrivia()).called(1);
+        expect(result, const Right(tNumberTrivia));
+      });
+    });
   });
 }
