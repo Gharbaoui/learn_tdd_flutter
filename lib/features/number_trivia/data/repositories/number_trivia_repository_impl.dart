@@ -5,6 +5,7 @@ import 'package:number_trivia/core/error/exceptions.dart';
 import 'package:number_trivia/core/platform/network_info.dart';
 import 'package:number_trivia/features/number_trivia/data/datasources/number_trivia_local_datasource.dart';
 import 'package:number_trivia/features/number_trivia/data/datasources/number_trivia_remote_datasource.dart';
+import 'package:number_trivia/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:number_trivia/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:number_trivia/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
@@ -25,31 +26,24 @@ class NumberTriviaRepsitoryImpl implements NumberTriviaRepository {
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
     int number,
   ) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final numberTriviaModel =
-            await remoteDataSource.getConcreteNumberTrivia(number);
-        localDataSource.cacheNumberTrivia(numberTriviaModel);
-        return Right(numberTriviaModel);
-      } on ServerException {
-        return Left(ServerFailure());
-      }
-    } else {
-      try {
-        final localTrivia = await localDataSource.getLastNumberTrivia();
-        return Right(localTrivia);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
-    }
+    return _getTrivia(() {
+      return remoteDataSource.getConcreteNumberTrivia(number);
+    });
   }
 
   @override
   Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
+    return _getTrivia(() {
+      return remoteDataSource.getRandomNumberTrivia();
+    });
+  }
+
+  Future<Either<Failure, NumberTrivia>> _getTrivia(
+      Future<NumberTriviaModel> Function()
+          getConcreteOrRandomNumberTrivia) async {
     if (await networkInfo.isConnected) {
       try {
-        final numberTriviaModel =
-            await remoteDataSource.getRandomNumberTrivia();
+        final numberTriviaModel = await getConcreteOrRandomNumberTrivia();
         localDataSource.cacheNumberTrivia(numberTriviaModel);
         return Right(numberTriviaModel);
       } on ServerException {
