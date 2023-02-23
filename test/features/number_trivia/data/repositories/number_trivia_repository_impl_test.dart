@@ -119,6 +119,15 @@ void main() {
         verify(() => mockLocalDataSource.getLastNumberTrivia()).called(1);
         expect(result, const Right(tNumberTrivia));
       });
+      test('should return cache failure when there is no cached data',
+          () async {
+        when(() => mockLocalDataSource.getLastNumberTrivia())
+            .thenThrow(CacheException());
+        final result = await repository.getConcreteNumberTrivia(tNumber);
+        verifyZeroInteractions(mockRemoteDataSource);
+        verify(() => mockLocalDataSource.getLastNumberTrivia()).called(1);
+        expect(result, Left(CacheFailure()));
+      });
     });
   });
 }
