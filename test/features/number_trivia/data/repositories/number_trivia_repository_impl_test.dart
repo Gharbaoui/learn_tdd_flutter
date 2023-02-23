@@ -49,5 +49,24 @@ void main() {
       verify(() => mockNetworkInfo.isConnected).called(1);
       verifyNoMoreInteractions(mockNetworkInfo);
     });
+
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data whene the call to remote data source is success',
+          () async {
+        when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
+            .thenAnswer((_) async => tNumberTriviaModel);
+
+        final result = await repository.getConcreteNumberTrivia(tNumber);
+        verify(() => mockRemoteDataSource.getConcreteNumberTrivia(tNumber))
+            .called(1);
+        expect(result, const Right(tNumberTrivia));
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      });
+    });
   });
 }
