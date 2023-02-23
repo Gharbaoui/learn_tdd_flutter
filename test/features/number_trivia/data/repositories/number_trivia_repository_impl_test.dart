@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:number_trivia/core/platform/network_info.dart';
@@ -40,6 +41,9 @@ void main() {
         NumberTriviaModel(number: tNumber, text: 'Test Text');
     const NumberTrivia tNumberTrivia = tNumberTriviaModel;
     test('check if device online', () {
+      when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
+          .thenAnswer((_) async => tNumberTriviaModel);
+
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       repository.getConcreteNumberTrivia(tNumber);
       verify(() => mockNetworkInfo.isConnected).called(1);
