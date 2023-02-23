@@ -16,6 +16,10 @@ class MockLocalDataSource extends Mock implements NumberTriviaLocalDataSource {}
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(const NumberTriviaModel(number: -1, text: 'setup'));
+  });
+
   MockRemoteDataSource mockRemoteDataSource = MockRemoteDataSource();
   MockLocalDataSource mockLocalDataSource = MockLocalDataSource();
   MockNetworkInfo mockNetworkInfo = MockNetworkInfo();
@@ -66,6 +70,23 @@ void main() {
             .called(1);
         expect(result, const Right(tNumberTrivia));
         verifyNoMoreInteractions(mockRemoteDataSource);
+      });
+      test(
+          'should cache the data locally when the call to remote data source is success',
+          () async {
+        when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
+            .thenAnswer((_) async => tNumberTriviaModel);
+        when(() => mockLocalDataSource.cacheNumberTrivia(any()))
+            .thenAnswer((_) async {});
+
+        await repository.getConcreteNumberTrivia(tNumber);
+
+        verify(() => mockRemoteDataSource.getConcreteNumberTrivia(tNumber))
+            .called(1);
+        verify(() => mockLocalDataSource.cacheNumberTrivia(tNumberTriviaModel))
+            .called(1);
+        verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
       });
     });
   });
