@@ -59,6 +59,8 @@ void main() {
     group('device is online', () {
       setUp(() {
         when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        when(() => mockLocalDataSource.cacheNumberTrivia(any()))
+            .thenAnswer((_) async {});
       });
 
       test(
@@ -66,8 +68,6 @@ void main() {
           () async {
         when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
             .thenAnswer((_) async => tNumberTriviaModel);
-        when(() => mockLocalDataSource.cacheNumberTrivia(any()))
-            .thenAnswer((_) async {});
 
         final result = await repository.getConcreteNumberTrivia(tNumber);
         verify(() => mockRemoteDataSource.getConcreteNumberTrivia(tNumber))
@@ -80,8 +80,6 @@ void main() {
           () async {
         when(() => mockRemoteDataSource.getConcreteNumberTrivia(any()))
             .thenAnswer((_) async => tNumberTriviaModel);
-        when(() => mockLocalDataSource.cacheNumberTrivia(any()))
-            .thenAnswer((_) async {});
 
         await repository.getConcreteNumberTrivia(tNumber);
 
