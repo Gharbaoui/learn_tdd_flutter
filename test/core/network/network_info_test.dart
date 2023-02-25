@@ -34,5 +34,15 @@ void main() {
       verify(() => mockConnectivity.checkConnectivity()).called(1);
       expect(result, true);
     });
+
+    test('other than wifi or mobile we should return false', () async {
+      when(() => mockConnectivity.checkConnectivity())
+          .thenAnswer((_) async => ConnectivityResult.none);
+
+      final result = await networkInfo.isConnected;
+
+      verify(() => mockConnectivity.checkConnectivity()).called(1);
+      expect(result, false);
+    });
   });
 }
