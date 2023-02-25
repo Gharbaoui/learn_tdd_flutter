@@ -11,7 +11,8 @@ class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isConnected async {
     final connectionResult = await connectivity.checkConnectivity();
-    if (connectionResult == ConnectivityResult.mobile) {
+    if (connectionResult == ConnectivityResult.mobile ||
+        connectionResult == ConnectivityResult.wifi) {
       return true;
     }
     return false;
