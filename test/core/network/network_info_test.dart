@@ -25,5 +25,14 @@ void main() {
       verify(() => mockConnectivity.checkConnectivity()).called(1);
       expect(result, true);
     });
+
+    test('should return true if we are connected through wifi', () async {
+      when(() => mockConnectivity.checkConnectivity())
+          .thenAnswer((_) async => ConnectivityResult.wifi);
+      final result = await networkInfo.isConnected;
+
+      verify(() => mockConnectivity.checkConnectivity()).called(1);
+      expect(result, true);
+    });
   });
 }
