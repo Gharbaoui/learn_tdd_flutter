@@ -1,13 +1,19 @@
-import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 abstract class NetworkInfo {
   Future<bool> get isConnected;
 }
 
 class NetworkInfoImpl implements NetworkInfo {
-  final DataConnectionChecker connectionChecker;
+  final Connectivity connectivity;
 
-  const NetworkInfoImpl(this.connectionChecker);
+  const NetworkInfoImpl(this.connectivity);
   @override
-  Future<bool> get isConnected => throw UnimplementedError();
+  Future<bool> get isConnected async {
+    final connectionResult = await connectivity.checkConnectivity();
+    if (connectionResult == ConnectivityResult.mobile) {
+      return true;
+    }
+    return false;
+  }
 }
