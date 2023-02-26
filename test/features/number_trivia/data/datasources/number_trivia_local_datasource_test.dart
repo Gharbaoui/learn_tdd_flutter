@@ -32,7 +32,7 @@ void main() {
           .thenReturn(fixture(jsonFileName));
 
       final result = await numberTriviaLocalDataSource.getLastNumberTrivia();
-      verify(() => mockSharedPreferences.getString('CACHED_NUMBER_TRIVIA'))
+      verify(() => mockSharedPreferences.getString(CACHED_NUMBER_TRIVIA))
           .called(1);
       expect(result, tNumberTriviaModel);
     });
