@@ -45,4 +45,18 @@ void main() {
       expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
     });
   });
+
+  group('cacheNumberTrivia', () {
+    const tNumberTriviaModel = NumberTriviaModel(number: 1, text: 'cache test');
+
+    test('shared preferences should be called with the right data', () {
+      when(() => mockSharedPreferences.setString(any(), any()))
+          .thenAnswer((_) async => true);
+      numberTriviaLocalDataSource.cacheNumberTrivia(tNumberTriviaModel);
+
+      final expStr = json.encode(tNumberTriviaModel.toJson());
+      verify(
+          () => mockSharedPreferences.setString(CACHED_NUMBER_TRIVIA, expStr));
+    });
+  });
 }
