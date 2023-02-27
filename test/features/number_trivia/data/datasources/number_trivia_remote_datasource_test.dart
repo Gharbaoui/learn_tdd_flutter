@@ -25,6 +25,16 @@ void main() {
     remoteDataSource = NumberTriviaRemoteDataSourceImpl(mockHttpClient);
   });
 
+  void setUpMockHttpClientSuccess200() {
+    when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+        .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+  }
+
+  void setUpMockHttpClientFailure404() {
+    when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+        .thenAnswer((_) async => http.Response('wrong body', 404));
+  }
+
   group('getConcreteNumberTrivia', () {
     const tNumber = 9;
     final tNumberTriviaModel =
@@ -32,8 +42,7 @@ void main() {
     test(
         'should preform a GET request on a URL with number and with application/json header',
         () async {
-      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+      setUpMockHttpClientSuccess200();
       await remoteDataSource.getConcreteNumberTrivia(tNumber);
       verify(
         () => mockHttpClient.get(
@@ -46,15 +55,13 @@ void main() {
     test(
         'should return NumberTriviaModel when the response is success aka status code = 200',
         () async {
-      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => http.Response(fixture('trivia.json'), 200));
+      setUpMockHttpClientSuccess200();
       final result = await remoteDataSource.getConcreteNumberTrivia(tNumber);
 
       expect(result, tNumberTriviaModel);
     });
     test('should throw server exception if response code is not 200', () {
-      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => http.Response('wrong body', 404));
+      setUpMockHttpClientFailure404();
 
       final call = remoteDataSource.getConcreteNumberTrivia;
 
