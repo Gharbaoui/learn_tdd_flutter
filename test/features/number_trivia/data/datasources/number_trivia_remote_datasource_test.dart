@@ -71,4 +71,40 @@ void main() {
       );
     });
   });
+
+  group('getRandomNumberTrivia', () {
+    final tNumberTriviaModel =
+        NumberTriviaModel.fromJson(json.decode(fixture('trivia.json')));
+    test(
+        'should preform a GET request on a URL with number and with application/json header',
+        () async {
+      setUpMockHttpClientSuccess200();
+      await remoteDataSource.getRandomNumberTrivia();
+      verify(
+        () => mockHttpClient.get(
+          Uri.parse('http://numbersapi.com/random'),
+          headers: {'Content-Type': 'application/json'},
+        ),
+      ).called(1);
+    });
+
+    test(
+        'should return NumberTriviaModel when the response is success aka status code = 200',
+        () async {
+      setUpMockHttpClientSuccess200();
+      final result = await remoteDataSource.getRandomNumberTrivia();
+
+      expect(result, tNumberTriviaModel);
+    });
+    test('should throw server exception if response code is not 200', () {
+      setUpMockHttpClientFailure404();
+
+      final call = remoteDataSource.getRandomNumberTrivia;
+
+      expect(
+        () => call(),
+        throwsA(const TypeMatcher<ServerException>()),
+      );
+    });
+  });
 }
