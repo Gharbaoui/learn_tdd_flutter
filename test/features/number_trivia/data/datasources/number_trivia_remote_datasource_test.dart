@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:number_trivia/core/error/exceptions.dart';
 import 'package:number_trivia/features/number_trivia/data/datasources/number_trivia_remote_datasource.dart';
 import 'package:number_trivia/features/number_trivia/data/models/number_trivia_model.dart';
 
@@ -50,6 +51,17 @@ void main() {
       final result = await remoteDataSource.getConcreteNumberTrivia(tNumber);
 
       expect(result, tNumberTriviaModel);
+    });
+    test('should throw server exception if response code is not 200', () {
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response('wrong body', 404));
+
+      final call = remoteDataSource.getConcreteNumberTrivia;
+
+      expect(
+        () => call(tNumber),
+        throwsA(const TypeMatcher<ServerException>()),
+      );
     });
   });
 }
