@@ -24,6 +24,8 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
       Uri.parse('http://numbersapi.com/$number'),
       headers: {'Content-Type': 'application/json'},
     );
+    return const NumberTriviaModel(
+        number: -1, text: 'dummy number trivia model');
   }
 
   @override
