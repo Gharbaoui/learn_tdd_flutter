@@ -23,5 +23,12 @@ void main() {
       final result = inputConverter.stringToUnsignedInt(str);
       expect(result, Left(InvalidInputFailure()));
     });
+
+    test('should return a failure when string representing a negative number',
+        () {
+      const str = '-12345';
+      final result = inputConverter.stringToUnsignedInt(str);
+      expect(result, Left(InvalidInputFailure()));
+    });
   });
 }
