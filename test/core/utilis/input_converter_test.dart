@@ -15,7 +15,13 @@ void main() {
         () {
       const str = '12345';
       final result = inputConverter.stringToUnsignedInt(str);
-      expect(result, const Right(123));
+      expect(result, const Right(12345));
+    });
+
+    test('should return a failure when string is not int', () {
+      const str = 'abc';
+      final result = inputConverter.stringToUnsignedInt(str);
+      expect(result, Left(InvalidInputFailure()));
     });
   });
 }
