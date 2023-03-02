@@ -40,17 +40,29 @@ void main() {
     const tNumberParsed = 1;
 
     blocTest(
-        'input converter should be called in order to validate the string number',
-        setUp: () {
-          when(() => inputConverter.stringToUnsignedInt(any()))
-              .thenReturn(const Right(tNumberParsed));
-        },
-        build: () => numberTriviaBloc,
-        act: (bloc) =>
-            bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
-        verify: (_) {
-          verify(() => inputConverter.stringToUnsignedInt(tNumberString))
-              .called(1);
-        });
+      'input converter should be called in order to validate the string number',
+      setUp: () {
+        when(() => inputConverter.stringToUnsignedInt(any()))
+            .thenReturn(const Right(tNumberParsed));
+      },
+      build: () => numberTriviaBloc,
+      act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+      verify: (_) {
+        verify(() => inputConverter.stringToUnsignedInt(tNumberString))
+            .called(1);
+      },
+    );
+
+    blocTest(
+      'should emit [Error] when the input is invalid',
+      setUp: () {
+        when(() => inputConverter.stringToUnsignedInt(any()))
+            .thenReturn(Left(InvalidInputFailure()));
+      },
+      build: () => numberTriviaBloc,
+      act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+      expect: () =>
+          [ErrorNumberTriviaState(errorMessage: INVALID_INPUT_FAILURE_MESSAGE)],
+    );
   });
 }
