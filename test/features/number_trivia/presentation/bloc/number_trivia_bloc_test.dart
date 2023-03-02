@@ -1,3 +1,5 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:number_trivia/core/utils/input_converter.dart';
@@ -31,5 +33,24 @@ void main() {
 
   test('initialState should be empty', () {
     expect(numberTriviaBloc.state, EmptyNumberTriviaState());
+  });
+
+  group('GetTriviaForConcteteNumber', () {
+    const tNumberString = '1';
+    const tNumberParsed = 1;
+
+    blocTest(
+        'input converter should be called in order to validate the string number',
+        setUp: () {
+          when(() => inputConverter.stringToUnsignedInt(any()))
+              .thenReturn(const Right(tNumberParsed));
+        },
+        build: () => numberTriviaBloc,
+        act: (bloc) =>
+            bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+        verify: (_) {
+          verify(() => inputConverter.stringToUnsignedInt(tNumberString))
+              .called(1);
+        });
   });
 }
