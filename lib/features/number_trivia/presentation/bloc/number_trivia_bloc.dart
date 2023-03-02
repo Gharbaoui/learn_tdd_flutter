@@ -14,5 +14,9 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     required this.getConcreteNumberTrivia,
     required this.getRandomNumberTrivia,
     required this.inputConverter,
-  }) : super(EmptyNumberTriviaState());
+  }) : super(EmptyNumberTriviaState()) {
+    on<GetNumberTriviaForConcrete>((event, emit) {
+      inputConverter.stringToUnsignedInt(event.numberString);
+    });
+  }
 }
