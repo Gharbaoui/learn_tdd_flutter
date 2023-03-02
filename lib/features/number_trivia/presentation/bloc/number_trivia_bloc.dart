@@ -25,10 +25,14 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     on<GetNumberTriviaForConcrete>((event, emit) {
       final converterResult =
           inputConverter.stringToUnsignedInt(event.numberString);
-      if (converterResult.isLeft()) {
-        emit(ErrorNumberTriviaState(
-            errorMessage: INVALID_INPUT_FAILURE_MESSAGE));
-      }
+
+      converterResult.fold(
+        (failure) {
+          emit(ErrorNumberTriviaState(
+              errorMessage: INVALID_INPUT_FAILURE_MESSAGE));
+        },
+        (success) {},
+      );
     });
   }
 }
