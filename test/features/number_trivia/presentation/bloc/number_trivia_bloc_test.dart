@@ -123,5 +123,21 @@ void main() {
         ErrorNumberTriviaState(errorMessage: CACHE_FAILURE_MESSAGE),
       ],
     );
+
+    blocTest(
+      'should emit [Loading, Error] when data is gotten unsuccessfull with server error message',
+      setUp: () {
+        when(() => inputConverter.stringToUnsignedInt(any()))
+            .thenReturn(const Right(tNumberParsed));
+        when(() => concrete(any()))
+            .thenAnswer((_) => Future.value(Left(ServerFailure())));
+      },
+      build: () => numberTriviaBloc,
+      act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+      expect: () => [
+        LoadingNumberTriviaState(),
+        ErrorNumberTriviaState(errorMessage: SERVER_FAILURE_MESSAGE),
+      ],
+    );
   });
 }
