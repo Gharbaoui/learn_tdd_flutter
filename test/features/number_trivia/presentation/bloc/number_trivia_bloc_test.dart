@@ -90,5 +90,21 @@ void main() {
         verify(() => concrete(const Params(number: tNumberParsed))).called(1);
       },
     );
+
+    blocTest(
+      'should emit [Loading, Loaded] when data is gotten successfully',
+      setUp: () {
+        when(() => inputConverter.stringToUnsignedInt(any()))
+            .thenReturn(const Right(tNumberParsed));
+        when(() => concrete(any()))
+            .thenAnswer((_) => Future.value(const Right(tNumberTrivia)));
+      },
+      build: () => numberTriviaBloc,
+      act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+      expect: () => [
+        LoadingNumberTriviaState(),
+        LoadedNumberTriviaState(numberTrivia: tNumberTrivia),
+      ],
+    );
   });
 }
