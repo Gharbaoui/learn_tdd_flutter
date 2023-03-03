@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:number_trivia/core/utils/input_converter.dart';
+import 'package:number_trivia/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:number_trivia/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'package:number_trivia/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
 import 'package:number_trivia/features/number_trivia/presentation/bloc/bloc.dart';
@@ -19,6 +20,10 @@ void main() {
   late MockGetRandomNumberTrivia random;
   late MockInputConverter inputConverter;
   late NumberTriviaBloc numberTriviaBloc;
+
+  setUpAll(() {
+    registerFallbackValue(const Params(number: -1));
+  });
 
   setUp(() {
     concrete = MockGetConcreteNumberTrivia();
@@ -38,12 +43,16 @@ void main() {
   group('GetTriviaForConcteteNumber', () {
     const tNumberString = '1';
     const tNumberParsed = 1;
+    const NumberTrivia tNumberTrivia =
+        NumberTrivia(number: 1, text: 'test trivia');
 
     blocTest(
       'input converter should be called in order to validate the string number',
       setUp: () {
         when(() => inputConverter.stringToUnsignedInt(any()))
             .thenReturn(const Right(tNumberParsed));
+        when(() => concrete(any()))
+            .thenAnswer((_) => Future.value(const Right(tNumberTrivia)));
       },
       build: () => numberTriviaBloc,
       act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
@@ -58,11 +67,28 @@ void main() {
       setUp: () {
         when(() => inputConverter.stringToUnsignedInt(any()))
             .thenReturn(Left(InvalidInputFailure()));
+        when(() => concrete(any()))
+            .thenAnswer((_) => Future.value(const Right(tNumberTrivia)));
       },
       build: () => numberTriviaBloc,
       act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
       expect: () =>
           [ErrorNumberTriviaState(errorMessage: INVALID_INPUT_FAILURE_MESSAGE)],
+    );
+
+    blocTest(
+      'should get from the concrete use case',
+      setUp: () {
+        when(() => inputConverter.stringToUnsignedInt(any()))
+            .thenReturn(const Right(tNumberParsed));
+        when(() => concrete(any()))
+            .thenAnswer((_) => Future.value(const Right(tNumberTrivia)));
+      },
+      build: () => numberTriviaBloc,
+      act: (bloc) => bloc.add(const GetNumberTriviaForConcrete(tNumberString)),
+      verify: (bloc) {
+        verify(() => concrete(const Params(number: tNumberParsed))).called(1);
+      },
     );
   });
 }
