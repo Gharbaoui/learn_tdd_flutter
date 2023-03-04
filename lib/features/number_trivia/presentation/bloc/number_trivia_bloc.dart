@@ -38,9 +38,7 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
           failureOrNumberTrivia.fold(
             (failure) {
               emit(ErrorNumberTriviaState(
-                errorMessage: (failure is CacheFailure)
-                    ? CACHE_FAILURE_MESSAGE
-                    : SERVER_FAILURE_MESSAGE,
+                errorMessage: _mapFailureToMessage(failure),
               ));
             },
             (numberTrivia) {
@@ -50,5 +48,16 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         },
       );
     });
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case CacheFailure:
+        return CACHE_FAILURE_MESSAGE;
+      case ServerFailure:
+        return SERVER_FAILURE_MESSAGE;
+      default:
+        return 'Unkown Error';
+    }
   }
 }
