@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:number_trivia/core/error/failures.dart';
 import 'package:number_trivia/core/usecases/usecase.dart';
 import 'package:number_trivia/core/utils/input_converter.dart';
+import 'package:number_trivia/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:number_trivia/features/number_trivia/presentation/bloc/number_trivia_event.dart';
 import 'package:number_trivia/features/number_trivia/presentation/bloc/number_trivia_state.dart';
 import 'package:number_trivia/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
@@ -36,16 +37,7 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
           emit(LoadingNumberTriviaState());
           final failureOrNumberTrivia =
               await getConcreteNumberTrivia(Params(number: number));
-          failureOrNumberTrivia.fold(
-            (failure) {
-              emit(ErrorNumberTriviaState(
-                errorMessage: _mapFailureToMessage(failure),
-              ));
-            },
-            (numberTrivia) {
-              emit(LoadedNumberTriviaState(numberTrivia: numberTrivia));
-            },
-          );
+          _emitRightState(failureOrNumberTrivia);
         },
       );
     });
@@ -53,18 +45,21 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     on<GetNumberTriviaForRandom>((event, emit) async {
       emit(LoadingNumberTriviaState());
       final failureOrNumberTrivia = await getRandomNumberTrivia(NoParams());
-
-      failureOrNumberTrivia.fold(
-        (failure) {
-          emit(ErrorNumberTriviaState(
-            errorMessage: _mapFailureToMessage(failure),
-          ));
-        },
-        (numberTrivia) {
-          emit(LoadedNumberTriviaState(numberTrivia: numberTrivia));
-        },
-      );
+      _emitRightState(failureOrNumberTrivia);
     });
+  }
+
+  void _emitRightState(Either<Failure, NumberTrivia> failureOrNumberTrivia) {
+    failureOrNumberTrivia.fold(
+      (failure) {
+        emit(ErrorNumberTriviaState(
+          errorMessage: _mapFailureToMessage(failure),
+        ));
+      },
+      (numberTrivia) {
+        emit(LoadedNumberTriviaState(numberTrivia: numberTrivia));
+      },
+    );
   }
 
   String _mapFailureToMessage(Failure failure) {
