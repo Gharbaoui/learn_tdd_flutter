@@ -37,13 +37,11 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
               await getConcreteNumberTrivia(Params(number: number));
           failureOrNumberTrivia.fold(
             (failure) {
-              if (failure is CacheFailure) {
-                emit(ErrorNumberTriviaState(
-                    errorMessage: CACHE_FAILURE_MESSAGE));
-              } else if (failure is ServerFailure) {
-                emit(ErrorNumberTriviaState(
-                    errorMessage: SERVER_FAILURE_MESSAGE));
-              }
+              emit(ErrorNumberTriviaState(
+                errorMessage: (failure is CacheFailure)
+                    ? CACHE_FAILURE_MESSAGE
+                    : SERVER_FAILURE_MESSAGE,
+              ));
             },
             (numberTrivia) {
               emit(LoadedNumberTriviaState(numberTrivia: numberTrivia));
