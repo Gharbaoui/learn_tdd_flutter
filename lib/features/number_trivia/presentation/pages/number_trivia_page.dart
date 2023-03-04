@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_trivia/features/number_trivia/presentation/bloc/bloc.dart';
 import 'package:number_trivia/features/number_trivia/presentation/bloc/number_trivia_bloc.dart';
+import 'package:number_trivia/features/number_trivia/presentation/bloc/number_trivia_state.dart';
+import 'package:number_trivia/features/number_trivia/presentation/widgets/trivia_controlls.dart';
+import 'package:number_trivia/features/number_trivia/presentation/widgets/widgets.dart';
 import 'package:number_trivia/injection_container.dart';
 
 class NumberTriviaPage extends StatelessWidget {
@@ -10,7 +14,7 @@ class NumberTriviaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Number Trivia')),
-      body: buildBody(context),
+      body: SingleChildScrollView(child: buildBody(context)),
     );
   }
 }
@@ -25,31 +29,32 @@ BlocProvider<NumberTriviaBloc> buildBody(BuildContext context) {
           children: [
             const SizedBox(height: 10),
             //! top half
-            Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: const Placeholder(),
+            BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
+              builder: (context, state) {
+                switch (state.runtimeType) {
+                  case EmptyNumberTriviaState:
+                    return const MessageDisplay(message: 'Start Searching...');
+                  case ErrorNumberTriviaState:
+                    return MessageDisplay(
+                      message: (state as ErrorNumberTriviaState).errorMessage,
+                    );
+                  case LoadingNumberTriviaState:
+                    return const LoadingWidget();
+                  case LoadedNumberTriviaState:
+                    return TriviaDisplay(
+                      numberTrivia:
+                          (state as LoadedNumberTriviaState).numberTrivia,
+                    );
+                }
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: const Placeholder(),
+                );
+              },
             ),
             //! bottom half
             const SizedBox(height: 20),
-            Column(
-              children: [
-                const Placeholder(fallbackHeight: 40),
-                const SizedBox(height: 10),
-                Row(
-                  children: const [
-                    Expanded(
-                      child: Placeholder(fallbackHeight: 30),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Placeholder(
-                        fallbackHeight: 30,
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            )
+            const TriviaControls()
           ],
         ),
       ),
