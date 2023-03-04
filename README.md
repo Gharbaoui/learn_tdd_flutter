@@ -73,3 +73,19 @@ data sources will return numberTriviaModel
 
 models are entities with some additional functionality added on top
 ```
+
+### DONE
+
+```
+this app in terms of functionality is very small
+but it demonstrat clean architecture using tdd
+```
+
+![](./pics/1.jpg)
+![](./pics/2.jpg)
+![](./pics/3.jpg)
+![](./pics/4.jpg)
+![](./pics/5.jpg)
+![](./pics/6.jpg)
+![](./pics/7.jpg)
+![](./pics/8.jpg)
